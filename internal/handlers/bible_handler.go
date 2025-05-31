@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/tkdnbb/bookofben-api/internal/models"
 	"github.com/tkdnbb/bookofben-api/internal/services"
 )
 
@@ -51,4 +52,52 @@ func (h *BibleHandler) GetBooks(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(books)
+}
+
+// AddVerse handles POST /api/verses
+func (h *BibleHandler) AddVerse(w http.ResponseWriter, r *http.Request) {
+	var verse models.Verse
+	if err := json.NewDecoder(r.Body).Decode(&verse); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	// 验证必填字段
+	if verse.BookID == "" || verse.Text == "" || verse.Chapter <= 0 || verse.Verse <= 0 {
+		http.Error(w, "Missing required fields: book_id, text, chapter, verse", http.StatusBadRequest)
+		return
+	}
+
+	err := h.service.AddVerse(verse)
+	if err != nil {
+		http.Error(w, "Failed to insert verse", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+}
+
+// SearchVerses handles GET /api/search?q=keyword
+func (h *BibleHandler) SearchVerses(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		http.Error(w, "Query parameter 'q' is required", http.StatusBadRequest)
+		return
+	}
+
+	verses, err := h.service.SearchVerses(query)
+	if err != nil {
+		http.Error(w, "Search failed", http.StatusInternalServerError)
+		return
+	}
+
+	response := map[string]interface{}{
+		"query":   query,
+		"count":   len(verses),
+		"results": verses,
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(w).Encode(response)
 }

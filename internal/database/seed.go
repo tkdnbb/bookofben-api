@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/tkdnbb/bookofben-api/internal/data"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -86,19 +87,33 @@ func initializeVerses(db *mongo.Database, ctx context.Context) error {
 		return nil // Already initialized
 	}
 
-	verses := []interface{}{
-		// Genesis Chapter 1 (KJV)
+	var verses []interface{}
+
+	// Genesis Chapter 1 (KJV) - 保持原有数据
+	verses = append(verses,
 		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 1, Text: "In the beginning God created the heaven and the earth."},
 		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 2, Text: "And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters."},
 		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 3, Text: "And God said, Let there be light: and there was light."},
 		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 4, Text: "And God saw the light, that it was good: and God divided the light from the darkness."},
 		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 5, Text: "And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day."},
+	)
 
-		// John 3:16 (Chinese)
+	// John 3:16 (Chinese) - 保持原有数据
+	verses = append(verses,
 		Verse{BookID: "JHN", BookName: "約翰福音", Chapter: 3, Verse: 16, Text: "神愛世人，甚至將他的獨生子賜給他們，叫一切信他的，不至滅亡，反得永生。"},
+	)
 
-		// The Book of Jachanan Ben Kathryn 1:1
-		Verse{BookID: "BEN", BookName: "The Book of Jachanan Ben Kathryn", Chapter: 1, Verse: 1, Text: "THE burden of the word of the LORD which came unto John the son of Kathryn, the daughter of Jacob and Messiah's Light, the son of Karl Hirsch, the son of Abraham, the son of Hillel, when the LORD first drew him out from the nations and inclined his spirit to seek after the LORD. It first came when he was about 30 [1995/6] years of age, saying expressly: \"Thou shalt surely be my witness to Israel.\""},
+	// The Book of Jachanan Ben Kathryn Chapter 1 - 使用从JSON加载的数据
+	chapter1Verses := data.GetChapterVerses(1)
+	for i, verseText := range chapter1Verses {
+		verse := Verse{
+			BookID:   "BEN",
+			BookName: "The Book of Jachanan Ben Kathryn",
+			Chapter:  1,
+			Verse:    i + 1, // 经文编号从1开始
+			Text:     verseText,
+		}
+		verses = append(verses, verse)
 	}
 
 	_, err := collection.InsertMany(ctx, verses)
@@ -106,6 +121,7 @@ func initializeVerses(db *mongo.Database, ctx context.Context) error {
 		return err
 	}
 
-	fmt.Println("Initialized verses")
+	fmt.Printf("Initialized verses: %d total\n", len(verses))
+	fmt.Printf("- Book of Ben Chapter 1: %d verses\n", len(chapter1Verses))
 	return nil
 }

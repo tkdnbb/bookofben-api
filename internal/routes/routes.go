@@ -1,6 +1,9 @@
 package routes
 
 import (
+	"log"
+
+	"github.com/tkdnbb/bookofben-api/internal/database"
 	"github.com/tkdnbb/bookofben-api/internal/handlers"
 
 	"github.com/go-chi/chi/v5"
@@ -10,6 +13,16 @@ import (
 
 // SetupRoutes configures and returns the router
 func SetupRoutes() *chi.Mux {
+	// Initialize database connection
+	if err := database.InitMongoDB("mongodb://root:example@localhost:27017", "bible_api"); err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
+
+	// Initialize sample data
+	if err := database.InitializeData(); err != nil {
+		log.Printf("Warning: Failed to initialize data: %v", err)
+	}
+
 	r := chi.NewRouter()
 
 	// Middleware
@@ -37,7 +50,14 @@ func SetupRoutes() *chi.Mux {
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/translations", bibleHandler.GetTranslations)
 		r.Get("/books", bibleHandler.GetBooks)
+		r.Post("/verses", bibleHandler.AddVerse)    // 新增经文
+		r.Get("/search", bibleHandler.SearchVerses) // 搜索经文
 	})
 
 	return r
+}
+
+// CloseDatabase provides a way to close the database connection
+func CloseDatabase() error {
+	return database.Close()
 }

@@ -6,12 +6,14 @@ import (
 	"strings"
 
 	"github.com/tkdnbb/bookofben-api/internal/data"
+	"github.com/tkdnbb/bookofben-api/internal/database"
 	"github.com/tkdnbb/bookofben-api/internal/models"
 )
 
 // BibleService handles business logic for Bible operations
 type BibleService struct {
 	data *data.BibleData
+	repo *database.Repository // <-- add this line
 }
 
 // NewBibleService creates a new BibleService instance
@@ -146,4 +148,40 @@ func (s *BibleService) buildText(verses []models.Verse) string {
 		textParts = append(textParts, verse.Text)
 	}
 	return strings.Join(textParts, "")
+}
+
+// AddVerse adds a new verse to the database
+func (s *BibleService) AddVerse(verse models.Verse) error {
+	// 转换 models.Verse 到 database.Verse
+	dbVerse := database.Verse{
+		BookID:   verse.BookID,
+		BookName: verse.BookName,
+		Chapter:  verse.Chapter,
+		Verse:    verse.Verse,
+		Text:     verse.Text,
+	}
+
+	return s.repo.InsertVerse(dbVerse)
+}
+
+// SearchVerses searches for verses containing the query string
+func (s *BibleService) SearchVerses(query string) ([]models.Verse, error) {
+	dbVerses, err := s.repo.SearchVerses(query)
+	if err != nil {
+		return nil, err
+	}
+
+	// 转换 database.Verse 到 models.Verse
+	verses := make([]models.Verse, len(dbVerses))
+	for i, dbVerse := range dbVerses {
+		verses[i] = models.Verse{
+			BookID:   dbVerse.BookID,
+			BookName: dbVerse.BookName,
+			Chapter:  dbVerse.Chapter,
+			Verse:    dbVerse.Verse,
+			Text:     dbVerse.Text,
+		}
+	}
+
+	return verses, nil
 }
