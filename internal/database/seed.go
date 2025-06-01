@@ -103,17 +103,23 @@ func initializeVerses(db *mongo.Database, ctx context.Context) error {
 		Verse{BookID: "JHN", BookName: "約翰福音", Chapter: 3, Verse: 16, Text: "神愛世人，甚至將他的獨生子賜給他們，叫一切信他的，不至滅亡，反得永生。"},
 	)
 
-	// The Book of Jachanan Ben Kathryn Chapter 1 - 使用从JSON加载的数据
-	chapter1Verses := data.GetChapterVerses(1)
-	for i, verseText := range chapter1Verses {
-		verse := Verse{
-			BookID:   "BEN",
-			BookName: "The Book of Jachanan Ben Kathryn",
-			Chapter:  1,
-			Verse:    i + 1, // 经文编号从1开始
-			Text:     verseText,
+	// The Book of Jachanan Ben Kathryn - 批量加载章节
+	benChapters := []int{1, 2} // 可以轻松添加更多章节
+	totalBenVerses := 0
+
+	for _, chapterNum := range benChapters {
+		chapterVerses := data.GetChapterVerses(chapterNum)
+		for i, verseText := range chapterVerses {
+			verses = append(verses, Verse{
+				BookID:   "BEN",
+				BookName: "The Book of Jachanan Ben Kathryn",
+				Chapter:  chapterNum,
+				Verse:    i + 1,
+				Text:     verseText,
+			})
 		}
-		verses = append(verses, verse)
+		totalBenVerses += len(chapterVerses)
+		fmt.Printf("- Book of Ben Chapter %d: %d verses\n", chapterNum, len(chapterVerses))
 	}
 
 	_, err := collection.InsertMany(ctx, verses)
@@ -122,6 +128,6 @@ func initializeVerses(db *mongo.Database, ctx context.Context) error {
 	}
 
 	fmt.Printf("Initialized verses: %d total\n", len(verses))
-	fmt.Printf("- Book of Ben Chapter 1: %d verses\n", len(chapter1Verses))
+	fmt.Printf("- Book of Ben total: %d verses\n", totalBenVerses)
 	return nil
 }
