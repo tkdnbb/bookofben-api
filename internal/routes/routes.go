@@ -2,7 +2,9 @@ package routes
 
 import (
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/tkdnbb/bookofben-api/internal/database"
 	"github.com/tkdnbb/bookofben-api/internal/handlers"
 
@@ -13,8 +15,19 @@ import (
 
 // SetupRoutes configures and returns the router
 func SetupRoutes() *chi.Mux {
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Println("Warning: No .env file found or failed to load")
+	}
+
+	// Get MongoDB connection string from environment
+	mongoConn := os.Getenv("MONGO_CONNECTION")
+	if mongoConn == "" {
+		log.Fatal("MONGO_CONNECTION not set in environment")
+	}
+
 	// Initialize database connection
-	if err := database.InitMongoDB("mongodb://root:example@localhost:27017", "bible_api"); err != nil {
+	if err := database.InitMongoDB(mongoConn, "bible_api"); err != nil {
 		log.Fatal("Failed to initialize database:", err)
 	}
 

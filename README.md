@@ -14,3 +14,9 @@ docker exec -it bookofben-mongo mongosh -u root -p example
 ## MongoDB shell commands
 use bible_api
 db.books.find()
+
+## .env
+Please create a .env file.
+```
+MONGO_CONNECTION=mongodb+srv://example
+```
