@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 // Repository handles database operations
@@ -59,8 +59,7 @@ func (r *Repository) GetVerses(bookID string, chapter, verse int) ([]Verse, erro
 		filter["verse"] = verse
 	}
 
-	findOptions := options.Find()
-	findOptions.Sort = bson.M{"verse": 1}
+	findOptions := options.Find().SetSort(bson.M{"verse": 1})
 	cursor, err := collection.Find(ctx, filter, findOptions)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find verses: %w", err)

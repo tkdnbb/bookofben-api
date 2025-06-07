@@ -8,8 +8,8 @@ import (
 
 	"github.com/tkdnbb/bookofben-api/internal/database"
 	"github.com/tkdnbb/bookofben-api/internal/models"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 // BibleService handles business logic for Bible operations
