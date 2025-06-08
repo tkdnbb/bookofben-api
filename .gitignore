@@ -33,3 +33,6 @@ go.work.sum
 
 # build directories
 bin/
+
+# for Alicloud FC uploads
+fc-*.zip
