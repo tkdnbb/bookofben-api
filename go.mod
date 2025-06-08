@@ -26,6 +26,7 @@ require (
 
 require (
 	github.com/alibabacloud-go/tea-console v1.0.0
+	github.com/aliyun/fc-runtime-go-sdk v0.3.1
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.16.7 // indirect
