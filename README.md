@@ -20,3 +20,7 @@ Please create a .env file.
 ```
 MONGO_CONNECTION=mongodb+srv://example
 ```
+
+## API testing
+curl -XGET http://localhost:8080/john%203:16
+curl -XGET http://localhost:8080/the%20book%20of%20jachanan%20ben%20kathryn%201
