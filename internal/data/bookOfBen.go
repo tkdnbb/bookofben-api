@@ -8,13 +8,12 @@ import (
 	"path/filepath"
 )
 
-var data = make([][]string, 73)
+const totalChapters = 73
+
+var data = make([][]string, totalChapters)
 
 func init() {
-	// 加载已有的章节
-	chapters := []int{1, 2} // 在这里添加你想要加载的章节号
-
-	for _, chapterNum := range chapters {
+	for chapterNum := 1; chapterNum <= totalChapters; chapterNum++ {
 		loadChapter(chapterNum)
 	}
 }
@@ -47,4 +46,8 @@ func GetChapterVerses(chapter int) []string {
 // GetAllData 返回所有数据（用于调试）
 func GetAllData() [][]string {
 	return data
+}
+
+func GetTotalChapters() int {
+	return totalChapters
 }
