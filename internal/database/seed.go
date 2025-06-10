@@ -104,10 +104,10 @@ func initializeVerses(db *mongo.Database, ctx context.Context) error {
 	)
 
 	// The Book of Jachanan Ben Kathryn - 批量加载章节
-	benChapters := []int{1, 2} // 可以轻松添加更多章节
+	benChapters := data.GetTotalChapters()
 	totalBenVerses := 0
 
-	for _, chapterNum := range benChapters {
+	for chapterNum := 1; chapterNum <= benChapters; chapterNum++ {
 		chapterVerses := data.GetChapterVerses(chapterNum)
 		for i, verseText := range chapterVerses {
 			verses = append(verses, Verse{
