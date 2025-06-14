@@ -1,0 +1,5 @@
+packages:
+  - path: "github.com/tkdnbb/bookofben-api/internal/models"
+    type_mappings:
+      time.Time: "string"
+      primitive.ObjectID: "string"
