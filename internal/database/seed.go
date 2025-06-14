@@ -87,20 +87,20 @@ func initializeVerses(db *mongo.Database, ctx context.Context) error {
 		return nil // Already initialized
 	}
 
-	var verses []interface{}
+	var verses []any
 
 	// Genesis Chapter 1 (KJV) - 保持原有数据
 	verses = append(verses,
-		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 1, Text: "In the beginning God created the heaven and the earth."},
-		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 2, Text: "And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters."},
-		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 3, Text: "And God said, Let there be light: and there was light."},
-		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 4, Text: "And God saw the light, that it was good: and God divided the light from the darkness."},
-		Verse{BookID: "GEN", BookName: "Genesis", Chapter: 1, Verse: 5, Text: "And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day."},
+		Verse{BookID: "GEN", TranslationID: "kjv", BookName: "Genesis", Chapter: 1, Verse: 1, Text: "In the beginning God created the heaven and the earth."},
+		Verse{BookID: "GEN", TranslationID: "kjv", BookName: "Genesis", Chapter: 1, Verse: 2, Text: "And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters."},
+		Verse{BookID: "GEN", TranslationID: "kjv", BookName: "Genesis", Chapter: 1, Verse: 3, Text: "And God said, Let there be light: and there was light."},
+		Verse{BookID: "GEN", TranslationID: "kjv", BookName: "Genesis", Chapter: 1, Verse: 4, Text: "And God saw the light, that it was good: and God divided the light from the darkness."},
+		Verse{BookID: "GEN", TranslationID: "kjv", BookName: "Genesis", Chapter: 1, Verse: 5, Text: "And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day."},
 	)
 
 	// John 3:16 (Chinese) - 保持原有数据
 	verses = append(verses,
-		Verse{BookID: "JHN", BookName: "約翰福音", Chapter: 3, Verse: 16, Text: "神愛世人，甚至將他的獨生子賜給他們，叫一切信他的，不至滅亡，反得永生。"},
+		Verse{BookID: "JHN", TranslationID: "cuv", BookName: "約翰福音", Chapter: 3, Verse: 16, Text: "神愛世人，甚至將他的獨生子賜給他們，叫一切信他的，不至滅亡，反得永生。"},
 	)
 
 	// The Book of Jachanan Ben Kathryn - 批量加载章节
@@ -111,11 +111,12 @@ func initializeVerses(db *mongo.Database, ctx context.Context) error {
 		chapterVerses := data.GetChapterVerses(chapterNum)
 		for i, verseText := range chapterVerses {
 			verses = append(verses, Verse{
-				BookID:   "BEN",
-				BookName: "The Book of Jachanan Ben Kathryn",
-				Chapter:  chapterNum,
-				Verse:    i + 1,
-				Text:     verseText,
+				BookID:        "BEN",
+				BookName:      "The Book of Jachanan Ben Kathryn",
+				TranslationID: "en",
+				Chapter:       chapterNum,
+				Verse:         i + 1,
+				Text:          verseText,
 			})
 		}
 		totalBenVerses += len(chapterVerses)

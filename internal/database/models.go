@@ -2,11 +2,12 @@ package database
 
 // Verse represents a Bible verse in the database
 type Verse struct {
-	BookID   string `json:"book_id" bson:"book_id"`
-	BookName string `json:"book_name" bson:"book_name"`
-	Chapter  int    `json:"chapter" bson:"chapter"`
-	Verse    int    `json:"verse" bson:"verse"`
-	Text     string `json:"text" bson:"text"`
+	BookID        string `json:"book_id" bson:"book_id"`
+	TranslationID string `json:"translation_id" bson:"tranlation_id"`
+	BookName      string `json:"book_name" bson:"book_name"`
+	Chapter       int    `json:"chapter" bson:"chapter"`
+	Verse         int    `json:"verse" bson:"verse"`
+	Text          string `json:"text" bson:"text"`
 }
 
 // Translation represents a Bible translation
