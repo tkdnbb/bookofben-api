@@ -4,12 +4,12 @@ import "time"
 
 // Verse represents a single Bible verse
 type Verse struct {
-	BookID        string `json:"book_id"`
-	BookName      string `json:"book_name"`
-	Chapter       int    `json:"chapter"`
-	Verse         int    `json:"verse"`
-	Text          string `json:"text"`
-	TranslationID string `json:"translation_id"` // 默认为 "en"
+	BookID        string `json:"book_id" bson:"book_id"`
+	BookName      string `json:"book_name" bson:"book_name"`
+	Chapter       int    `json:"chapter" bson:"chapter"`
+	Verse         int    `json:"verse" bson:"verse"`
+	Text          string `json:"text" bson:"text"`
+	TranslationID string `json:"translation_id" bson:"translation_id"` // 默认为 "en"
 }
 
 // BibleResponse represents the API response for Bible passages
@@ -24,9 +24,9 @@ type BibleResponse struct {
 
 // Translation represents a Bible translation
 type Translation struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	Note string `json:"note"`
+	ID   string `json:"id" bson:"id"`
+	Name string `json:"name" bson:"name"`
+	Note string `json:"note" bson:"note"`
 }
 
 // Book represents a Bible book
